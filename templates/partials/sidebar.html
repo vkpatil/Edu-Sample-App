@@ -1,0 +1,93 @@
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="{% url 'home' %}" class="brand-link">
+      <span class="brand-icon"><i class="bi bi-mortarboard-fill"></i></span>
+      <span class="brand-text">EduSys</span>
+    </a>
+    <button class="sidebar-toggle d-lg-none" id="sidebarClose" aria-label="Close sidebar">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="sidebar-section-label">Main</div>
+  <nav class="sidebar-nav">
+    <a class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+      <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
+    </a>
+    <a class="sidebar-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_create' %}active{% endif %}" href="{% url 'course_list' %}">
+      <i class="bi bi-book"></i><span>Courses</span>
+    </a>
+    <a class="sidebar-link {% if request.resolver_match.url_name == 'enrollment_list' %}active{% endif %}" href="{% url 'enrollment_list' %}">
+      <i class="bi bi-journal-check"></i><span>Enrollments</span>
+    </a>
+    <a class="sidebar-link {% if request.resolver_match.url_name == 'quiz_list' %}active{% endif %}" href="{% url 'quiz_list' %}">
+      <i class="bi bi-patch-question"></i><span>Quizzes</span>
+    </a>
+    {% if user.role == 'TEACHER' or user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'enrollment_create' %}active{% endif %}" href="{% url 'enrollment_create' %}">
+        <i class="bi bi-journal-plus"></i><span>Create Enrollment</span>
+      </a>
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'quiz_create' %}active{% endif %}" href="{% url 'quiz_create' %}">
+        <i class="bi bi-ui-checks-grid"></i><span>Create Quiz</span>
+      </a>
+    {% endif %}
+    {% if user.role == 'STUDENT' %}
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'enroll' %}active{% endif %}" href="{% url 'enroll' %}">
+        <i class="bi bi-plus-circle"></i><span>Enroll in Course</span>
+      </a>
+    {% endif %}
+  </nav>
+
+  {% if user.role == 'ADMIN' or user.role == 'SUPER_ADMIN' %}
+    <div class="sidebar-section-label">Administration</div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'staff_create' %}active{% endif %}" href="{% url 'staff_create' %}">
+        <i class="bi bi-person-plus"></i><span>Add Staff</span>
+      </a>
+      <a class="sidebar-link {% if request.resolver_match.url_name == 'student_create' %}active{% endif %}" href="{% url 'student_create' %}">
+        <i class="bi bi-person-vcard"></i><span>Add Student</span>
+      </a>
+      <a class="sidebar-link" href="{% url 'admin:index' %}">
+        <i class="bi bi-shield-lock"></i><span>Admin Panel</span>
+      </a>
+    </nav>
+  {% endif %}
+
+  <div class="sidebar-section-label">Account</div>
+  <nav class="sidebar-nav">
+    <a class="sidebar-link {% if request.resolver_match.url_name == 'help_page' %}active{% endif %}" href="{% url 'help_page' %}">
+      <i class="bi bi-life-preserver"></i><span>Help</span>
+    </a>
+    <a class="sidebar-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">
+      <i class="bi bi-person-circle"></i><span>My Profile</span>
+    </a>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="sidebar-link sidebar-link-btn w-100">
+        <i class="bi bi-box-arrow-left"></i><span>Logout</span>
+      </button>
+    </form>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="sidebar-user-avatar">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</div>
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-name">{{ user.get_full_name|default:user.username }}</div>
+      <div class="sidebar-user-role">{{ user.get_role_display }}</div>
+    </div>
+  </div>
+</aside>
+
+<div class="sidebar-backdrop d-lg-none" id="sidebarBackdrop"></div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const closeBtn = document.getElementById('sidebarClose');
+  const openBtn = document.getElementById('sidebarOpenBtn');
+  function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('show'); }
+  function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('show'); }
+  if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+  if (backdrop) backdrop.addEventListener('click', closeSidebar);
+  if (openBtn) openBtn.addEventListener('click', openSidebar);
+</script>

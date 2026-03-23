@@ -1,0 +1,21 @@
+{% extends 'base_auth.html' %}
+{% block title %}Add Staff | EduSys{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Administration</li>
+  <li class="breadcrumb-item active">Add Staff</li>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="h2">Add Staff User</h1>
+  <p>Provision Teacher and Admin accounts for your institution</p>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <button class="btn btn-brand-solid" type="submit"><i class="bi bi-person-plus me-1"></i> Create User</button>
+  </form>
+</div>
+{% endblock %}

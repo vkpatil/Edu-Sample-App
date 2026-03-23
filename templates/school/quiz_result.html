@@ -1,0 +1,62 @@
+{% extends 'base_auth.html' %}
+{% block title %}Quiz Result | EduSys{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'quiz_list' %}">Quizzes</a></li>
+  <li class="breadcrumb-item active">Result</li>
+{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div>
+    <h1 class="h2">Quiz Result</h1>
+    <p>{{ attempt.quiz.title }} · {{ attempt.quiz.course.code }}</p>
+  </div>
+  <a href="{% url 'quiz_list' %}" class="btn btn-ghost-brand">Back to Quizzes</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Score</p>
+      <p class="metric-value">{{ attempt.score }}/{{ attempt.max_score }}</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Percentage</p>
+      <p class="metric-value">{{ percent }}%</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Submitted</p>
+      <p class="metric-value metric-value-sm">{{ attempt.submitted_at|date:'d M Y H:i' }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Question</th><th>Your Answer</th><th>Result</th><th>Marks</th></tr>
+      </thead>
+      <tbody>
+        {% for ans in ordered_answers %}
+          <tr>
+            <td>{{ ans.question.text }}</td>
+            <td>{{ ans.selected_choice.text|default:'No answer selected' }}</td>
+            <td>
+              {% if ans.is_correct %}
+                <span class="badge badge-completed px-2 py-1 rounded-pill">Correct</span>
+              {% else %}
+                <span class="badge badge-dropped px-2 py-1 rounded-pill">Incorrect</span>
+              {% endif %}
+            </td>
+            <td>{{ ans.marks_obtained }}/{{ ans.question.marks }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

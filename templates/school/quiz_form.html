@@ -1,0 +1,23 @@
+{% extends 'base_auth.html' %}
+{% block title %}Create Quiz | EduSys{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'quiz_list' %}">Quizzes</a></li>
+  <li class="breadcrumb-item active">New Quiz</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h2">Create Quiz</h1>
+  <p>Set quiz details, then add questions and correct answers</p>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <div class="d-flex gap-2">
+      <button class="btn btn-brand-solid" type="submit"><i class="bi bi-arrow-right me-1"></i> Save & Add Questions</button>
+      <a href="{% url 'quiz_list' %}" class="btn btn-ghost-brand">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base_auth.html' %}
+{% block title %}Teacher Dashboard | EduSys{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Teacher Dashboard</li>{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h2">Teacher Dashboard</h1>
+  <p>Manage your courses, students, and assessments</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon"><i class="bi bi-book-half"></i></div>
+      <div>
+        <p class="metric-value">{{ my_courses }}</p>
+        <p class="metric-label">My Courses</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon metric-icon-blue"><i class="bi bi-people"></i></div>
+      <div>
+        <p class="metric-value">{{ active_students }}</p>
+        <p class="metric-label">Active Students</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon metric-icon-green"><i class="bi bi-ui-checks-grid"></i></div>
+      <div>
+        <p class="metric-value">{{ my_quizzes }}</p>
+        <p class="metric-label">My Quizzes</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon metric-icon-red"><i class="bi bi-hourglass-split"></i></div>
+      <div>
+        <p class="metric-value">{{ draft_quizzes }}</p>
+        <p class="metric-label">Draft Quizzes</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if top_courses %}
+<div class="table-card mb-4">
+  <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+    <h2 class="h5 mb-0">Most Enrolled in Your Courses</h2>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead><tr><th>Code</th><th>Title</th><th>Enrolled</th></tr></thead>
+      <tbody>
+        {% for course in top_courses %}
+        <tr>
+          <td>{{ course.code }}</td>
+          <td>{{ course.title }}</td>
+          <td><span class="badge badge-enrolled px-2 py-1 rounded-pill">{{ course.enrolled }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<div class="d-flex gap-2">
+  <a href="{% url 'course_create' %}" class="btn btn-ghost-brand">Create Course</a>
+  <a href="{% url 'quiz_create' %}" class="btn btn-brand-solid">Create Quiz</a>
+</div>
+{% endblock %}

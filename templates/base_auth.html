@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="app-shell">
+  {% include 'partials/sidebar.html' %}
+  <div class="app-content">
+    {% include 'partials/topbar.html' %}
+    <main class="app-main">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-dismissible fade show alert-{{ message.tags|default:'info' }} mb-4" role="alert">
+            <i class="bi bi-info-circle me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" title="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="access-mode-banner access-mode-banner-private mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div>
+            <strong>Authenticated Access Mode</strong>
+            <span class="text-muted ms-2">You are signed in as {{ user.get_role_display }}.</span>
+          </div>
+          <a href="{% url 'help_page' %}" class="btn btn-ghost-brand btn-sm">Access Help</a>
+        </div>
+      </div>
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="topbar-hamburger d-lg-none" id="sidebarOpenBtn" aria-label="Open sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <nav aria-label="breadcrumb" class="d-none d-md-flex">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+        {% block breadcrumb %}{% endblock %}
+      </ol>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <span class="role-badge role-{{ user.role|lower }}">{{ user.get_role_display }}</span>
+    <a class="topbar-avatar" href="{% url 'profile' %}" title="My Profile">
+      {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+    </a>
+  </div>
+</header>

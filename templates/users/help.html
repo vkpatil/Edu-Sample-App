@@ -1,0 +1,209 @@
+{% extends 'base_auth.html' %}
+{% block title %}Help Center | EduSys{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Help Center</li>{% endblock %}
+{% block content %}
+<div class="page-header d-flex flex-wrap align-items-start justify-content-between gap-3">
+  <div>
+    <h1 class="h2">Help Center</h1>
+    <p>Understand your access level, troubleshoot permission issues, and navigate site features with confidence.</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'access_guide' %}" class="btn btn-ghost-brand">Public Access Guide</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-brand-solid"><i class="bi bi-arrow-left me-1"></i> Back to Dashboard</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <div class="card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">What You Can Access</h2>
+        <p class="text-muted mb-3">Your current role is <span class="role-badge role-{{ user.role|lower }}">{{ user.get_role_display }}</span>.</p>
+        {% if role_actions %}
+          <ul class="mb-0">
+            {% for action in role_actions %}
+              <li class="mb-2">{{ action }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted mb-0">No role-specific actions are available for this account.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Quick Start</h2>
+        <ol class="mb-0">
+          <li class="mb-2">Open your <a href="{% url 'dashboard' %}">Dashboard</a> to see your role-specific summary.</li>
+          <li class="mb-2">Visit <a href="{% url 'course_list' %}">Courses</a> to browse or manage course content.</li>
+          <li class="mb-2">Use <a href="{% url 'enrollment_list' %}">Enrollments</a> to track learner status.</li>
+          <li class="mb-2">Use <a href="{% url 'quiz_list' %}">Quizzes</a> for assessments and results.</li>
+          <li>Keep your information updated in <a href="{% url 'profile' %}">My Profile</a>.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body p-4">
+    <h2 class="h5 mb-3">Role and Screen Access Guide</h2>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Screen</th>
+            <th>Student</th>
+            <th>Teacher</th>
+            <th>Admin</th>
+            <th>Super Admin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dashboard</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Courses List</td>
+            <td>Yes</td>
+            <td>Yes (own courses only)</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Create Course</td>
+            <td>No</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Enrollments List</td>
+            <td>Yes (own only)</td>
+            <td>Yes (own courses only)</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Create Enrollment</td>
+            <td>No</td>
+            <td>Yes (own courses only)</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Quiz List</td>
+            <td>Yes (published + enrolled)</td>
+            <td>Yes (own courses only)</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Create Quiz</td>
+            <td>No</td>
+            <td>Yes (own courses only)</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Take Quiz</td>
+            <td>Yes</td>
+            <td>No</td>
+            <td>No</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Quiz Results</td>
+            <td>Own attempts only</td>
+            <td>Own course attempts only</td>
+            <td>All</td>
+            <td>All</td>
+          </tr>
+          <tr>
+            <td>User Management</td>
+            <td>No</td>
+            <td>No</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <div class="metric-icon metric-icon-blue"><i class="bi bi-book"></i></div>
+        <h3 class="h6 mb-0">Courses</h3>
+      </div>
+      <p class="text-muted mb-0">Browse course catalog, view course owners, and access course-specific actions based on your role.</p>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <div class="metric-icon"><i class="bi bi-journal-check"></i></div>
+        <h3 class="h6 mb-0">Enrollments</h3>
+      </div>
+      <p class="text-muted mb-0">Students self-enroll; teaching and admin roles can manage enrollment records and status updates.</p>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <div class="metric-icon metric-icon-red"><i class="bi bi-patch-question"></i></div>
+        <h3 class="h6 mb-0">Quizzes</h3>
+      </div>
+      <p class="text-muted mb-0">Attempt timed quizzes, navigate question-by-question, and review score details after submission.</p>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="metric-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <div class="metric-icon metric-icon-green"><i class="bi bi-person-gear"></i></div>
+        <h3 class="h6 mb-0">Account</h3>
+      </div>
+      <p class="text-muted mb-0">Use My Profile to update personal details. Admin users can also create staff and student users.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">When Access Is Denied</h2>
+        <ol class="mb-0">
+          <li class="mb-2">Confirm you are signed in with the correct account.</li>
+          <li class="mb-2">Check your role badge in the top bar.</li>
+          <li class="mb-2">Compare your role with the access table above.</li>
+          <li>If access still seems incorrect, contact an Admin or Super Admin.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Access Levels At a Glance</h2>
+        <p class="text-muted mb-3">Use this quick summary to understand who can grant what:</p>
+        <ul class="mb-0">
+          <li class="mb-2"><strong>Student:</strong> self-service learning and quiz participation.</li>
+          <li class="mb-2"><strong>Teacher:</strong> manages own-course content and learner progress.</li>
+          <li class="mb-2"><strong>Admin:</strong> operational control and user provisioning.</li>
+          <li><strong>Super Admin:</strong> full platform oversight and governance.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

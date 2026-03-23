@@ -1,0 +1,53 @@
+{% extends 'base_public.html' %}
+{% block title %}EduSys | Professional Education Platform{% endblock %}
+{% block content %}
+<section class="hero-shell p-4 p-md-5 mb-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <p class="eyebrow mb-2"><i class="bi bi-mortarboard me-1"></i> Modern Campus Operations</p>
+      <h1 class="display-5 fw-bold mb-3 text-brand-deep">One platform for every role in your institution.</h1>
+      <p class="lead text-secondary mb-4">EduSys streamlines course management, enrollment workflows, and user administration with a polished, role-based experience.</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'register' %}" class="btn btn-brand-solid btn-lg"><i class="bi bi-person-plus me-1"></i> Create Student Account</a>
+        <a href="{% url 'login' %}" class="btn btn-ghost-brand btn-lg">Sign In</a>
+        <a href="{% url 'access_guide' %}" class="btn btn-link text-decoration-none">View Access Guide</a>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card p-4">
+        <h2 class="h5 mb-3 text-brand-deep">Who uses EduSys?</h2>
+        <ul class="list-unstyled mb-0">
+          <li class="d-flex align-items-center gap-2 mb-3">
+            <span class="metric-icon metric-icon-red icon-compact"><i class="bi bi-shield-check"></i></span>
+            <div><strong>Super Admin</strong><br><small class="text-muted">Platform oversight & configuration</small></div>
+          </li>
+          <li class="d-flex align-items-center gap-2 mb-3">
+            <span class="metric-icon metric-icon-blue icon-compact"><i class="bi bi-building"></i></span>
+            <div><strong>Admin</strong><br><small class="text-muted">Institutional operations</small></div>
+          </li>
+          <li class="d-flex align-items-center gap-2 mb-3">
+            <span class="metric-icon metric-icon-green icon-compact"><i class="bi bi-person-workspace"></i></span>
+            <div><strong>Teacher</strong><br><small class="text-muted">Course creation & delivery</small></div>
+          </li>
+          <li class="d-flex align-items-center gap-2">
+            <span class="metric-icon icon-compact"><i class="bi bi-backpack"></i></span>
+            <div><strong>Student</strong><br><small class="text-muted">Enrollment & learning</small></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card p-4 p-md-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-8">
+      <h2 class="h4 mb-2 text-brand-deep">Already signed in?</h2>
+      <p class="text-muted mb-0">Use the private Help Center for role-specific actions, feature walkthroughs, and permission details inside the platform.</p>
+    </div>
+    <div class="col-lg-4 text-lg-end">
+      <a href="{% url 'help_page' %}" class="btn btn-brand-solid">Open Help Center</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

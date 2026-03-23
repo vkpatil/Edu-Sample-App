@@ -1,0 +1,74 @@
+{% extends 'base_auth.html' %}
+{% block title %}Quizzes | EduSys{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Quizzes</li>{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div>
+    <h1 class="h2">Quizzes</h1>
+    <p>Track assessments and results by course</p>
+  </div>
+  {% if request.user.role == 'TEACHER' or request.user.role == 'ADMIN' or request.user.role == 'SUPER_ADMIN' %}
+    <a class="btn btn-brand-solid" href="{% url 'quiz_create' %}"><i class="bi bi-plus-lg me-1"></i> Create Quiz</a>
+  {% endif %}
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Quiz</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Questions</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in quiz_rows %}
+          {% with quiz=row.quiz attempt=row.attempt %}
+          <tr>
+            <td><span class="fw-semibold text-brand-teal">{{ quiz.course.code }}</span></td>
+            <td>
+              <div class="fw-semibold">{{ quiz.title }}</div>
+              <div class="text-muted small">{{ quiz.description|default:'-'|truncatechars:70 }}</div>
+            </td>
+            <td>{{ quiz.duration_minutes }} min</td>
+            <td>
+              {% if quiz.is_published %}
+                <span class="badge badge-completed px-2 py-1 rounded-pill">Published</span>
+              {% else %}
+                <span class="badge badge-dropped px-2 py-1 rounded-pill">Draft</span>
+              {% endif %}
+            </td>
+            <td>{{ quiz.questions.count }}</td>
+            <td>
+              {% if request.user.role == 'STUDENT' %}
+                {% if attempt and attempt.status == 'SUBMITTED' %}
+                  <a href="{% url 'quiz_result' attempt.id %}" class="btn btn-sm btn-ghost-brand">View Result</a>
+                {% elif attempt and attempt.status == 'IN_PROGRESS' %}
+                  <a href="{% url 'quiz_take' quiz.id %}" class="btn btn-sm btn-brand-solid">Resume Attempt</a>
+                {% elif quiz.is_published and quiz.questions.count > 0 %}
+                  <a href="{% url 'quiz_take' quiz.id %}" class="btn btn-sm btn-brand-solid">Take Quiz</a>
+                {% else %}
+                  <span class="text-muted">Unavailable</span>
+                {% endif %}
+              {% else %}
+                <a href="{% url 'quiz_question_create' quiz.id %}" class="btn btn-sm btn-ghost-brand">Add Question</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endwith %}
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              <i class="bi bi-inbox fs-4 d-block mb-2"></i>No quizzes found.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

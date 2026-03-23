@@ -1,0 +1,135 @@
+{% extends 'base_auth.html' %}
+{% block title %}Take Quiz | EduSys{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'quiz_list' %}">Quizzes</a></li>
+  <li class="breadcrumb-item active">Take Quiz</li>
+{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div>
+  <h1 class="h2">{{ quiz.title }}</h1>
+  <p>{{ quiz.course.code }} · {{ quiz.questions.count }} question{{ quiz.questions.count|pluralize }} · {{ quiz.duration_minutes }} min</p>
+  </div>
+  <a href="{% url 'quiz_list' %}" class="btn btn-ghost-brand">Back to Quizzes</a>
+</div>
+
+{% if show_saved %}
+  <div class="alert alert-success py-2 px-3 mb-3" role="alert">
+    <i class="bi bi-check2-circle me-2"></i>Answer saved for this attempt.
+  </div>
+{% endif %}
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Progress</p>
+      <p class="metric-value">{{ answered_count }}/{{ total_questions }}</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Live Score</p>
+      <p class="metric-value">{{ live_score }}/{{ max_score }}</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Live Percent</p>
+      <p class="metric-value">{{ live_percent }}%</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="metric-card">
+      <p class="metric-label">Time Left</p>
+      <p class="metric-value" id="quizTimer" data-remaining="{{ remaining_seconds }}">--:--</p>
+    </div>
+  </div>
+</div>
+
+<div class="card p-3 mb-3">
+  <div class="d-flex flex-wrap gap-2">
+    {% for item in question_states %}
+      <a href="{% url 'quiz_take' quiz.id %}?q={{ item.index }}"
+         class="quiz-step-pill {% if item.current %}current{% elif item.answered %}answered{% endif %}">
+        Q{{ item.index }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+<form method="post" class="d-grid gap-3" id="quizAttemptForm">
+  {% csrf_token %}
+  <input type="hidden" name="current_index" value="{{ current_index }}">
+
+  <div class="card p-4">
+      <p class="text-muted mb-2">Question {{ current_index }} of {{ total_questions }}</p>
+      <h2 class="h6 mb-3">{{ current_question.text }} <span class="text-muted">({{ current_question.marks }} mark{{ current_question.marks|pluralize }})</span></h2>
+      <div class="d-grid gap-2">
+        {% for choice in current_question.choices.all %}
+          <label class="form-check d-flex align-items-start gap-2 p-2 rounded quiz-option">
+            <input class="form-check-input mt-1" type="radio" name="question_{{ current_question.id }}" value="{{ choice.id }}" {% if selected_choice_id == choice.id %}checked{% endif %}>
+            <span>{{ choice.text }}</span>
+          </label>
+        {% endfor %}
+      </div>
+  </div>
+
+  <div class="d-flex gap-2 justify-content-between">
+    <button type="submit" name="action" value="prev" class="btn btn-ghost-brand" {% if is_first %}disabled{% endif %}>
+      <i class="bi bi-arrow-left me-1"></i> Previous
+    </button>
+    <div class="d-flex gap-2">
+      {% if not is_last %}
+        <button type="submit" name="action" value="next" class="btn btn-brand-solid">
+          Next <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+      {% else %}
+        <button type="submit" name="action" value="submit" class="btn btn-brand-solid" id="submitQuizBtn">
+          <i class="bi bi-send-check me-1"></i> Submit Quiz
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+<script>
+  (function () {
+    const timerEl = document.getElementById('quizTimer');
+    const formEl = document.getElementById('quizAttemptForm');
+    if (!timerEl || !formEl) {
+      return;
+    }
+
+    let remaining = parseInt(timerEl.dataset.remaining || '0', 10);
+
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function renderTimer() {
+      timerEl.textContent = formatTime(Math.max(0, remaining));
+      if (remaining <= 120) {
+        timerEl.classList.add('text-danger');
+      }
+    }
+
+    renderTimer();
+    const tick = setInterval(() => {
+      remaining -= 1;
+      renderTimer();
+
+      if (remaining <= 0) {
+        clearInterval(tick);
+        const hiddenAction = document.createElement('input');
+        hiddenAction.type = 'hidden';
+        hiddenAction.name = 'action';
+        hiddenAction.value = 'submit';
+        formEl.appendChild(hiddenAction);
+        formEl.submit();
+      }
+    }, 1000);
+  })();
+</script>
+{% endblock %}

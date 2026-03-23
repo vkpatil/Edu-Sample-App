@@ -1,0 +1,23 @@
+{% extends 'base_auth.html' %}
+{% block title %}Create Enrollment | EduSys{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'enrollment_list' %}">Enrollments</a></li>
+  <li class="breadcrumb-item active">Create Enrollment</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h2">Create Enrollment</h1>
+  <p>Assign a student to a course</p>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <div class="d-flex gap-2">
+      <button class="btn btn-brand-solid" type="submit"><i class="bi bi-check2 me-1"></i> Create Enrollment</button>
+      <a href="{% url 'enrollment_list' %}" class="btn btn-ghost-brand">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

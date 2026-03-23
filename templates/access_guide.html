@@ -1,0 +1,116 @@
+{% extends 'base_public.html' %}
+{% block title %}Access Guide | EduSys{% endblock %}
+{% block content %}
+<section class="hero-shell p-4 p-md-5 mb-4">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-7">
+      <p class="eyebrow mb-2"><i class="bi bi-shield-check me-1"></i> Access and Permissions</p>
+      <h1 class="display-6 fw-bold mb-3 text-brand-deep">Know exactly what each role can do.</h1>
+      <p class="lead text-secondary mb-4">This page explains public vs private access, role permissions, and where to go when you cannot access a page.</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'login' %}" class="btn btn-brand-solid"><i class="bi bi-box-arrow-in-right me-1"></i> Sign In</a>
+        <a href="{% url 'register' %}" class="btn btn-ghost-brand">Create Student Account</a>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card p-4 h-100">
+        <h2 class="h5 mb-3 text-brand-deep">Public vs Private</h2>
+        <div class="mb-3">
+          <h3 class="h6 mb-1">Public Pages</h3>
+          <p class="text-muted mb-0">Home, Access Guide, Sign In, and Student Registration are available without login.</p>
+        </div>
+        <div>
+          <h3 class="h6 mb-1">Private Pages</h3>
+          <p class="text-muted mb-0">Dashboard, Courses, Enrollments, Quizzes, Profile, and User Management require authentication and role checks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="card mb-4">
+  <div class="card-body p-4">
+    <h2 class="h5 mb-3">Role Access Matrix</h2>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Student</th>
+            <th>Teacher</th>
+            <th>Admin</th>
+            <th>Super Admin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dashboard</td>
+            <td>Own dashboard</td>
+            <td>Own dashboard</td>
+            <td>Admin dashboard</td>
+            <td>Global dashboard</td>
+          </tr>
+          <tr>
+            <td>Courses</td>
+            <td>Browse</td>
+            <td>View own courses</td>
+            <td>View all</td>
+            <td>View all</td>
+          </tr>
+          <tr>
+            <td>Create Course</td>
+            <td>No</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Enrollments</td>
+            <td>Own records</td>
+            <td>Own course records</td>
+            <td>All</td>
+            <td>All</td>
+          </tr>
+          <tr>
+            <td>Quizzes</td>
+            <td>Published + enrolled</td>
+            <td>Own course quizzes</td>
+            <td>All</td>
+            <td>All</td>
+          </tr>
+          <tr>
+            <td>User Management</td>
+            <td>No</td>
+            <td>No</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="metric-card h-100">
+      <h3 class="h6 mb-2">If You See Permission Errors</h3>
+      <ul class="mb-0">
+        <li>Confirm you are logged in with the expected account.</li>
+        <li>Check your role badge in the app top bar.</li>
+        <li>Use the in-app Help page after login for detailed role actions.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="metric-card h-100">
+      <h3 class="h6 mb-2">Need an Access Change?</h3>
+      <p class="text-muted mb-3">Students can sign up directly. Staff access changes should be requested from Admin or Super Admin.</p>
+      <div class="d-flex gap-2">
+        <a href="{% url 'login' %}" class="btn btn-ghost-brand btn-sm">Sign In</a>
+        <a href="{% url 'register' %}" class="btn btn-brand-solid btn-sm">Student Sign Up</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

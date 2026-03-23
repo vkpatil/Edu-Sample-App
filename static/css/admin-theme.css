@@ -1,0 +1,127 @@
+:root {
+  --admin-brand-deep: #0f3d3e;
+  --admin-brand-teal: #1f7a7a;
+  --admin-brand-accent: #cb6d51;
+  --admin-bg-soft: #f4f6f9;
+  --admin-border: #dde4ec;
+}
+
+html[data-theme="light"],
+:root {
+  --primary: var(--admin-brand-teal);
+  --secondary: var(--admin-brand-deep);
+  --accent: var(--admin-brand-accent);
+  --header-color: #ffffff;
+  --header-branding-color: #ffffff;
+  --header-bg: var(--admin-brand-deep);
+  --header-link-color: #ffffff;
+  --breadcrumbs-bg: #eef4f4;
+  --breadcrumbs-link-fg: var(--admin-brand-deep);
+  --breadcrumbs-fg: #355360;
+  --link-fg: var(--admin-brand-teal);
+  --link-hover-color: #145e5f;
+  --button-bg: var(--admin-brand-deep);
+  --button-fg: #ffffff;
+  --default-button-bg: var(--admin-brand-teal);
+  --default-button-hover-bg: #145e5f;
+  --close-button-bg: #647889;
+  --close-button-hover-bg: #4e6271;
+  --body-bg: var(--admin-bg-soft);
+  --body-fg: #1e2428;
+  --hairline-color: var(--admin-border);
+  --border-color: var(--admin-border);
+  --selected-bg: #e8f4f4;
+  --selected-row: #f3faf9;
+}
+
+body,
+input,
+textarea,
+select,
+button {
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3,
+#site-name {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+#header {
+  box-shadow: 0 4px 18px rgba(15, 61, 62, 0.18);
+}
+
+#site-name a {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.admin-global-nav {
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.admin-global-nav a {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.admin-global-nav a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.module,
+.inline-group,
+.dashboard .module,
+#content-related,
+#changelist-filter {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(15, 61, 62, 0.08);
+}
+
+#changelist table thead th {
+  background: #f8fafc;
+}
+
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+.button,
+a.button {
+  border-radius: 8px;
+}
+
+.object-tools a,
+.object-tools a:link,
+.object-tools a:visited {
+  background: var(--admin-brand-teal);
+  border-radius: 8px;
+}
+
+.object-tools a:hover,
+.object-tools a:focus {
+  background: #145e5f;
+}
+
+.login #container {
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(15, 61, 62, 0.12);
+  border: 1px solid var(--admin-border);
+}
+
+.login #header {
+  border-radius: 14px 14px 0 0;
+}
+
+@media (max-width: 767px) {
+  .admin-global-nav {
+    display: none;
+  }
+}

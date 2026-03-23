@@ -1,0 +1,65 @@
+{% extends 'base_auth.html' %}
+{% block title %}Enrollments | EduSys{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Enrollments</li>{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1 class="h2">Enrollments</h1>
+  <p>Track and manage student course enrollments</p>
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Student</th><th>Course</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for item in enrollments %}
+          <tr>
+            <td>
+              <span class="d-flex align-items-center gap-2">
+                <span class="topbar-avatar" style="width:30px;height:30px;font-size:.65rem;flex-shrink:0">
+                  {{ item.student.first_name|first|upper }}{{ item.student.last_name|first|upper }}
+                </span>
+                {{ item.student.get_full_name|default:item.student.username }}
+              </span>
+            </td>
+            <td>
+              <span class="fw-semibold" style="color:var(--brand-teal)">{{ item.course.code }}</span>
+              <span class="text-muted"> — {{ item.course.title }}</span>
+            </td>
+            <td>
+              {% if item.status == 'ENROLLED' %}
+                <span class="badge badge-enrolled px-2 py-1 rounded-pill">Enrolled</span>
+              {% elif item.status == 'COMPLETED' %}
+                <span class="badge badge-completed px-2 py-1 rounded-pill">Completed</span>
+              {% else %}
+                <span class="badge badge-dropped px-2 py-1 rounded-pill">Dropped</span>
+              {% endif %}
+            </td>
+            <td class="text-muted">{{ item.enrolled_at|date:'d M Y' }}</td>
+            <td>
+              {% if request.user.role != 'STUDENT' %}
+                <form class="d-flex gap-2" method="post" action="{% url 'enrollment_status_update' item.id %}">
+                  {% csrf_token %}
+                  <select class="form-select form-select-sm" name="status" style="max-width:130px" aria-label="Update enrollment status">
+                    <option value="ENROLLED" {% if item.status == 'ENROLLED' %}selected{% endif %}>Enrolled</option>
+                    <option value="COMPLETED" {% if item.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
+                    <option value="DROPPED" {% if item.status == 'DROPPED' %}selected{% endif %}>Dropped</option>
+                  </select>
+                  <button class="btn btn-sm btn-ghost-brand" type="submit">Save</button>
+                </form>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="text-center text-muted py-4"><i class="bi bi-inbox fs-4 d-block mb-2"></i>No enrollments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

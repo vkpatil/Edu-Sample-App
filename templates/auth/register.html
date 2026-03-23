@@ -1,0 +1,34 @@
+{% extends 'base_public.html' %}
+{% block title %}Student Signup | EduSys{% endblock %}
+{% block content %}
+<div class="row g-4 align-items-center justify-content-center py-2">
+  <div class="col-lg-5">
+    <div class="card p-4 h-100">
+      <h1 class="h3 mb-2 text-brand-deep">Student Access Registration</h1>
+      <p class="text-muted">This form creates a Student account with learner access features.</p>
+      <ul class="mb-3">
+        <li class="mb-2">Enroll in available courses.</li>
+        <li class="mb-2">Take published quizzes for enrolled courses.</li>
+        <li>View your own results and profile.</li>
+      </ul>
+      <p class="mb-0">Need staff access instead? Contact an Admin or Super Admin, or review the <a href="{% url 'access_guide' %}">Access Guide</a>.</p>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="form-card form-card-540">
+      <div class="mb-4">
+        <h2 class="h4 mb-1 text-brand-deep">Create Student Account</h2>
+        <p class="text-muted mb-0">Join your institution and start your learning journey.</p>
+      </div>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'partials/form_fields.html' with form=form %}
+        <button class="btn btn-brand-solid" type="submit"><i class="bi bi-person-plus me-1"></i> Register</button>
+      </form>
+      <p class="text-muted text-small-muted mt-3 mb-0">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

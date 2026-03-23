@@ -1,0 +1,67 @@
+{% extends 'base_auth.html' %}
+{% block title %}Super Admin Dashboard | EduSys{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Super Admin Dashboard</li>{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h2">Super Admin Dashboard</h1>
+  <p>Platform-wide health, users, and governance</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-2">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon"><i class="bi bi-people"></i></div>
+      <div><p class="metric-value">{{ total_students }}</p><p class="metric-label">Students</p></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-2">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon metric-icon-blue"><i class="bi bi-person-workspace"></i></div>
+      <div><p class="metric-value">{{ total_teachers }}</p><p class="metric-label">Teachers</p></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-2">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon metric-icon-green"><i class="bi bi-shield-lock"></i></div>
+      <div><p class="metric-value">{{ total_admins }}</p><p class="metric-label">Admins</p></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon"><i class="bi bi-book-half"></i></div>
+      <div><p class="metric-value">{{ total_courses }}</p><p class="metric-label">Courses</p></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center gap-3">
+      <div class="metric-icon metric-icon-red"><i class="bi bi-patch-check"></i></div>
+      <div><p class="metric-value">{{ published_quizzes }}</p><p class="metric-label">Published Quizzes</p></div>
+    </div>
+  </div>
+</div>
+
+{% if top_courses %}
+<div class="table-card mb-4">
+  <div class="p-4 border-bottom"><h2 class="h5 mb-0">Top Courses by Enrollment</h2></div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead><tr><th>Code</th><th>Title</th><th>Enrolled</th></tr></thead>
+      <tbody>
+      {% for course in top_courses %}
+        <tr>
+          <td><span class="fw-semibold text-brand-teal">{{ course.code }}</span></td>
+          <td>{{ course.title }}</td>
+          <td><span class="badge badge-enrolled px-2 py-1 rounded-pill">{{ course.enrolled }}</span></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<div class="d-flex gap-2">
+  <a href="{% url 'admin:index' %}" class="btn btn-ghost-brand">Open Admin Panel</a>
+  <a href="{% url 'staff_create' %}" class="btn btn-brand-solid">Manage Staff</a>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base_auth.html' %}
+{% block title %}Add Student | EduSys{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Administration</li>
+  <li class="breadcrumb-item active">Add Student</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 class="h2">Add Student</h1>
+  <p>Create a student account directly from the admin workspace</p>
+</div>
+
+<div class="form-card">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <button class="btn btn-brand-solid" type="submit"><i class="bi bi-person-plus me-1"></i> Create Student</button>
+  </form>
+</div>
+{% endblock %}
