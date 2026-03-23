@@ -36,6 +36,11 @@ docker compose up --build
 - App: <http://localhost:8000>
 - MailHog: <http://localhost:8025>
 
+## CI/CD Pipeline
+
+- GitHub Actions pipeline and setup guide: `.github/workflows/README.md`
+- Database migration pipeline workflow: `.github/workflows/db-migration-deploy.yml`
+
 ## Local (without Docker)
 
 1. Create and activate virtual environment.

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "dev"
+    },
+    "namePrefix": {
+      "value": "edusys"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "vnetName": {
+      "value": "vnet-dev-core"
+    },
+    "vnetAddressSpaces": {
+      "value": [
+        "10.50.0.0/16"
+      ]
+    },
+    "appsSubnetName": {
+      "value": "sn-dev-apps"
+    },
+    "appsSubnetPrefix": {
+      "value": "10.50.1.0/24"
+    },
+    "dbSubnetName": {
+      "value": "sn-dev-db"
+    },
+    "dbSubnetPrefix": {
+      "value": "10.50.2.0/24"
+    },
+    "postgresSkuName": {
+      "value": "Standard_B2s"
+    },
+    "postgresSkuTier": {
+      "value": "Burstable"
+    },
+    "privateEndpointsSubnetPrefix": {
+      "value": "10.50.3.0/24"
+    },
+    "appGatewaySubnetPrefix": {
+      "value": "10.50.4.0/24"
+    },
+    "postgresAdminPassword": {
+      "value": ""
+    },
+    "appGatewaySslPfxBase64": {
+      "value": ""
+    },
+    "appGatewaySslPfxPassword": {
+      "value": ""
+    }
+  }
+}

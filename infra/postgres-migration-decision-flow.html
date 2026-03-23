@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Azure PostgreSQL Migration Decision Flow</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #17202a;
+      --muted: #5f6b7a;
+      --border: #dde3ea;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #edf3ff 0%, var(--bg) 55%);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .mermaid {
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Azure PostgreSQL Migration Decision Flow</h1>
+      <p>Rendered Mermaid diagram from the migration decision tree.</p>
+
+      <div class="mermaid">
+flowchart TD
+    A([START]) --> B{"Q1: Is downtime tolerance LOW<br/>(need minimal downtime)?"}
+
+    B -->|YES| C["Use Azure PostgreSQL Migration Service (ONLINE)"]
+    C --> C1["Run premigration validation<br/>(Validate / Validate and migrate)"]
+    C --> C2["Requires CDC/logical decoding<br/>prerequisites + cutover step"]
+
+    B -->|NO| D["Use Dump & Restore (OFFLINE)"]
+    D --> D1["Downtime = dump + restore<br/>+ validation window"]
+
+    C2 --> E
+    D1 --> E
+
+    E{"Q2: Is your source reachable only<br/>via private network (no public IP)?"}
+
+    E -->|YES| F["Ensure VPN/ExpressRoute +<br/>VNet-integrated target; follow migration<br/>service networking scenario OR run<br/>dump/restore from a connected host"]
+
+    E -->|NO| G["Public access scenario supported<br/>(ensure 5432 reachability)"]
+
+    F --> H
+    G --> H
+
+    H{"Q3: Database size / time<br/>window concerns?"}
+
+    H -->|Large DB / tight window| I["Prefer directory format + parallelism<br/>(-Fd / pg_restore)"]
+    H -->|Small/medium DB| J["Plain format is simplest<br/>(pg_dump + psql)"]
+
+    I --> K
+    J --> K
+
+    K{"Q4: Need roles/users preserved?"}
+
+    K -->|YES| L["Include pg_dumpall -r<br/>(and handle Flexible Server<br/>password restrictions)"]
+    K -->|NO| M["Migrate schema/data only"]
+
+    L --> N([END])
+    M --> N
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "default", securityLevel: "loose" });
+  </script>
+</body>
+</html>

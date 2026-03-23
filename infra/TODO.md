@@ -1,0 +1,27 @@
+# Azure IaC TODO (Bicep)
+
+- [ ] Confirm target resource group + region (defaults in `infra/main.bicep`).
+- [ ] Confirm VNet + subnet CIDRs (especially `privateEndpointsSubnetPrefix` and `appGatewaySubnetPrefix`) don’t overlap existing allocations.
+- [ ] Decide inbound model:
+  - [ ] Keep Application Gateway public on `443`, backend to Web App via private endpoint + private DNS.
+  - [ ] Or make App Gateway internal (private frontend) if this is only for corporate/VPN access.
+- [ ] Provide TLS cert for Application Gateway:
+  - [ ] Base64 PFX content -> `appGatewaySslPfxBase64`
+  - [ ] PFX password -> `appGatewaySslPfxPassword`
+- [ ] Provide Postgres admin password securely -> `postgresAdminPassword`.
+- [ ] If you need private-only deployments to App Service, deploy/operate from a host that can resolve and reach the SCM private endpoint (`privatelink.scm.azurewebsites.net`).
+- [ ] Ensure global name uniqueness:
+  - [ ] `webAppName` (App Service)
+  - [ ] `keyVaultName` (Key Vault)
+  - [ ] `postgresServerName` (Postgres Flexible)
+- [ ] Deploy Bicep (example): `az deployment group create -g <rg> -f infra/main.bicep -p infra/dev.bicepparam`.
+- [ ] Post-deploy validation:
+  - [ ] From a VM/jumpbox in the VNet, verify DNS resolves privately:
+    - [ ] `${webAppName}.azurewebsites.net` -> private endpoint IP
+    - [ ] `${keyVaultName}.vault.azure.net` -> private endpoint IP
+    - [ ] `${postgresServerName}.postgres.database.azure.com` -> private IP
+  - [ ] Verify App Gateway backend health is green and end-to-end HTTPS works.
+- [ ] App configuration follow-ups (outside IaC scope here):
+  - [ ] Grant Web App managed identity `Key Vault Secrets User` on the Key Vault (RBAC).
+  - [ ] Move DB password out of Web App app settings into Key Vault references if desired.
+  - [ ] Set Django allowed hosts / CSRF trusted origins for the App Gateway hostname.
