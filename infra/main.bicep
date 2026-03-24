@@ -433,6 +433,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           value: 'true'
         }
         {
+          name: 'AZURE_KEY_VAULT_URL'
+          value: keyVault.properties.vaultUri
+        }
+        {
           name: 'DATABASE_HOST'
           value: '${postgresServerName}.postgres.database.azure.com'
         }
@@ -475,6 +479,85 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
       defaultAction: 'Deny'
     }
   }
+}
+
+@description('Allow web app to read secrets from Key Vault via managed identity.')
+resource keyVaultSecretReaderRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: keyVault
+  name: guid(keyVault.id, webApp.identity.principalId, 'Key Vault Secrets User')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
+    principalId: webApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource keyVaultPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = {
+  name: '${namePrefix}-${environmentName}-pe-kv'
+  location: location
+  properties: {
+    subnet: {
+      id: privateEndpointsSubnet.id
+    }
+    privateLinkServiceConnections: [
+      {
+        name: 'keyvault'
+        properties: {
+          privateLinkServiceId: keyVault.id
+          groupIds: [
+            'vault'
+          ]
+          privateLinkServiceConnectionState: {
+            status: 'Approved'
+            description: 'Auto-approved by IaC'
+            actionsRequired: 'None'
+          }
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    privateEndpointsSubnet
+    keyVault
+  ]
+}
+
+resource keyVaultPrivateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-11-01' = {
+  name: '${keyVaultPrivateEndpoint.name}/default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'keyvault'
+        properties: {
+          privateDnsZoneId: privateDnsZoneKeyVault.id
+        }
+      }
+    ]
+  }
+  dependsOn: [
+    keyVaultPrivateEndpoint
+    privateDnsZoneKeyVaultLink
+  ]
+}
+
+resource privateDnsZoneKeyVault 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: privateDnsZoneKeyVaultName
+  location: 'global'
+}
+
+resource privateDnsZoneKeyVaultLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
+  name: '${privateDnsZoneKeyVault.name}/${namePrefix}-${environmentName}-link'
+  location: 'global'
+  properties: {
+    registrationEnabled: false
+    virtualNetwork: {
+      id: vnet.id
+    }
+  }
+  dependsOn: [
+    privateDnsZoneKeyVault
+    vnet
+  ]
 }
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-06-01' = {
@@ -816,3 +899,4 @@ output dbSubnetId string = dbSubnet.id
 output privateEndpointsSubnetId string = privateEndpointsSubnet.id
 output appGatewaySubnetId string = appGatewaySubnet.id
 output webAppHostname string = '${webApp.name}.azurewebsites.net'
+output keyVaultUrl string = keyVault.properties.vaultUri

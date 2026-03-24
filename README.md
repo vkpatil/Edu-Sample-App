@@ -9,6 +9,7 @@ Professional educational management system built with Django, PostgreSQL, Docker
 - Docker Compose for local development
 - MailHog for development email capture
 - Bootstrap 5 with custom branding
+- Azure Key Vault for production secrets management
 
 ## User Roles
 
@@ -25,29 +26,38 @@ Professional educational management system built with Django, PostgreSQL, Docker
 cp .env.example .env
 ```
 
-1. Build and run:
+2. Build and run:
 
 ```bash
 docker compose up --build
 ```
 
-1. Open app:
+3. Open app:
 
 - App: <http://localhost:8000>
 - MailHog: <http://localhost:8025>
 
-## CI/CD Pipeline
+## Documentation
 
-- GitHub Actions pipeline and setup guide: `.github/workflows/README.md`
-- Database migration pipeline workflow: `.github/workflows/db-migration-deploy.yml`
+### Infrastructure & Deployment
+- **GitHub Actions**: `.github/workflows/README.md` - CI/CD pipeline setup and troubleshooting
+- **Database Migrations**: `.github/workflows/db-migration-deploy.yml` - Schema migration workflow
+- **Architecture**: `infra/architecture.md` - System design and resource diagrams
+- **Infrastructure as Code**: `infra/main.bicep` - Azure resource provisioning template
 
-## Local (without Docker)
+### Secrets Management
+- **Key Vault Setup**: `KEYVAULT_SETUP.md` - Step-by-step guide for Azure Key Vault integration
+- **Key Vault Implementation**: `KEYVAULT_IMPLEMENTATION.md` - Technical overview and architecture
+- **Key Vault Details**: `config/KEY_VAULT_SETUP.md` - API reference and best practices
+
+## Local Development (without Docker)
 
 1. Create and activate virtual environment.
 2. Install dependencies: `pip install -r requirements.txt`
 3. Ensure PostgreSQL is running with db/user/password as `edusys`.
-4. Run migrations: `python manage.py migrate`
-5. Create admin user: `python manage.py createsuperuser`
+4. Copy `.env.example` to `.env`
+5. Run migrations: `python manage.py migrate`
+6. Create admin user: `python manage.py createsuperuser`
 6. Start app: `python manage.py runserver`
 
 ## Core Routes

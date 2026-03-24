@@ -2,13 +2,17 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from config.secrets import get_secrets_manager
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-dev-only")
-DEBUG = os.getenv("DEBUG", "1") == "1"
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
+# Initialize secrets manager (Key Vault + environment variables)
+secrets = get_secrets_manager(use_key_vault=not os.getenv("DISABLE_KEY_VAULT"))
+
+SECRET_KEY = secrets.get("SECRET_KEY", default="django-insecure-local-dev-only")
+DEBUG = secrets.get_bool("DEBUG", default=True)
+ALLOWED_HOSTS = secrets.get_list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -54,11 +58,11 @@ ASGI_APPLICATION = "config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "edusys"),
-        "USER": os.getenv("POSTGRES_USER", "edusys"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "edusys"),
-        "HOST": os.getenv("POSTGRES_HOST", "db"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "NAME": secrets.get("POSTGRES_DB", default="edusys"),
+        "USER": secrets.get("POSTGRES_USER", default="edusys"),
+        "PASSWORD": secrets.get("POSTGRES_PASSWORD", default="edusys"),
+        "HOST": secrets.get("POSTGRES_HOST", default="db"),
+        "PORT": secrets.get_int("POSTGRES_PORT", default=5432),
     }
 }
 
@@ -86,8 +90,8 @@ LOGOUT_REDIRECT_URL = "login"
 LOGIN_URL = "login"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "mailhog")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "1025"))
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@edusys.local")
+EMAIL_HOST = secrets.get("EMAIL_HOST", default="mailhog")
+EMAIL_PORT = secrets.get_int("EMAIL_PORT", default=1025)
+EMAIL_USE_TLS = secrets.get_bool("EMAIL_USE_TLS", default=False)
+EMAIL_USE_SSL = secrets.get_bool("EMAIL_USE_SSL", default=False)
+DEFAULT_FROM_EMAIL = secrets.get("DEFAULT_FROM_EMAIL", default="no-reply@edusys.local")
