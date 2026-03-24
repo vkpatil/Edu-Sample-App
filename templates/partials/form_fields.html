@@ -1,4 +1,16 @@
-{% for field in form %}
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      <div>{{ error }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
   <div class="mb-3">
     {% if field.field.widget.input_type == 'checkbox' %}
       <div class="form-check">
